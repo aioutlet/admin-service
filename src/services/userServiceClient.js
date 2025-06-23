@@ -8,7 +8,7 @@ const USER_SERVICE_BASE_URL = process.env.USER_SERVICE_BASE_URL || 'http://local
  */
 export const fetchAllUsers = async (adminToken) => {
   // Forward admin JWT to user-service for authentication
-  const res = await axios.get(`${USER_SERVICE_BASE_URL}/`, {
+  const res = await axios.get(`${USER_SERVICE_BASE_URL}`, {
     headers: {
       Authorization: `Bearer ${adminToken}`,
     },
@@ -21,10 +21,17 @@ export const fetchAllUsers = async (adminToken) => {
  * Requires a valid admin or service JWT.
  */
 export const fetchUserById = async (id, token) => {
-  const res = await axios.get(`${USER_SERVICE_BASE_URL}/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+  try {
+    const res = await axios.get(`${USER_SERVICE_BASE_URL}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(res.data);
+    return res.data;
+  } catch (err) {
+    // Log the error details for debugging
+    console.error('Error fetching user by ID:', err.response?.data || err.message);
+    throw err;
+  }
 };
 
 /**
