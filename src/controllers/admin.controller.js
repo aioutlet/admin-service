@@ -116,7 +116,12 @@ export const deleteUser = asyncHandler(async (req, res) => {
   if (!adminValidator.isValidObjectId(req.params.id)) {
     return res.status(400).json({ error: 'Invalid user ID' });
   }
-  logger.info('Admin deleting user', { actorId: req.user?._id, targetId: req.params.id });
-  const result = await removeUserById(req.params.id, req.headers.authorization?.split(' ')[1]);
-  res.json(result);
+  // Prevent admin from deleting himself
+  if (req.user && req.user.id && req.user.id.toString() === req.params.id) {
+    logger.warn('Admin attempted to delete himself', { actorId: req.user.id });
+    return res.status(403).json({ error: 'Admins cannot delete their own account.' });
+  }
+  logger.info('Admin deleting user', { actorId: req.user?.id, targetId: req.params.id });
+  await removeUserById(req.params.id, req.headers.authorization?.split(' ')[1]);
+  res.status(204).send();
 });
