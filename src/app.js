@@ -1,5 +1,6 @@
 import express from 'express';
 import adminRoutes from './routes/admin.routes.js';
+import logger from './utils/logger.js';
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,6 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 6000;
-app.listen(PORT, () => console.log(`Admin service running on port ${PORT}`));
+app.listen(PORT, () => logger.info(`Admin service running on port ${PORT}`));
 
 export default app;
