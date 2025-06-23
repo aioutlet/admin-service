@@ -1,0 +1,90 @@
+import axios from 'axios';
+
+const USER_SERVICE_BASE_URL = process.env.USER_SERVICE_BASE_URL || 'http://localhost:5000';
+
+/**
+ * Fetch all users from the user-service as an admin.
+ * Forwards the admin JWT for authentication.
+ */
+export const fetchAllUsers = async (adminToken) => {
+  // Forward admin JWT to user-service for authentication
+  const res = await axios.get(`${USER_SERVICE_BASE_URL}/`, {
+    headers: {
+      Authorization: `Bearer ${adminToken}`,
+    },
+  });
+  return res.data;
+};
+
+/**
+ * Fetch a single user by ID from the user-service.
+ * Requires a valid admin or service JWT.
+ */
+export const fetchUserById = async (id, token) => {
+  const res = await axios.get(`${USER_SERVICE_BASE_URL}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+/**
+ * Update a user's profile by ID in the user-service.
+ * Accepts a data object with fields to update.
+ */
+export const updateUserById = async (id, data, token) => {
+  const res = await axios.patch(`${USER_SERVICE_BASE_URL}/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+/**
+ * Update a user's password by ID in the user-service.
+ * Accepts a data object with the new password.
+ */
+export const updateUserPasswordById = async (id, data, token) => {
+  const res = await axios.post(`${USER_SERVICE_BASE_URL}/${id}/password/change`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+/**
+ * Activate a user account by ID in the user-service.
+ */
+export const activateUserById = async (id, token) => {
+  // Admin: activate user by ID
+  const res = await axios.patch(
+    `${USER_SERVICE_BASE_URL}/${id}`,
+    { isActive: true },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res.data;
+};
+
+/**
+ * Deactivate a user account by ID in the user-service.
+ */
+export const deactivateUserById = async (id, token) => {
+  // Admin: deactivate user by ID
+  const res = await axios.patch(
+    `${USER_SERVICE_BASE_URL}/${id}`,
+    { isActive: false },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res.data;
+};
+
+/**
+ * Remove (delete) a user by ID in the user-service.
+ */
+export const removeUserById = async (id, token) => {
+  const res = await axios.delete(`${USER_SERVICE_BASE_URL}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

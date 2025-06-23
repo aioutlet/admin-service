@@ -1,0 +1,46 @@
+{
+  "name": "admin-service",
+  "version": "1.0.0",
+  "description": "Admin microservice for AIOutlet platform.",
+  "main": "src/server.js",
+  "type": "module",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aioutlet/admin-service.git"
+  },
+  "keywords": [
+    "aioutlet",
+    "microservice",
+    "node",
+    "express",
+    "mongo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aioutlet/admin-service/issues"
+  },
+  "homepage": "https://github.com/aioutlet/admin-service#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "babel-jest": "^30.0.2",
+    "jest": "^30.0.2",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.0",
+    "winston": "^3.17.0"
+  }
+}
