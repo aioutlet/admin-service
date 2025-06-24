@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import ErrorResponse from '../utils/ErrorResponse.js';
 
 /**
  * Middleware for JWT authentication in the admin service.
@@ -8,14 +9,14 @@ import jwt from 'jsonwebtoken';
 export const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(401).json({ error: 'Unauthorized: Missing Authorization header' });
+    return next(new ErrorResponse('Unauthorized: Missing Authorization header', 401));
   }
   if (!authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Unauthorized: Authorization header must start with Bearer' });
+    return next(new ErrorResponse('Unauthorized: Authorization header must start with Bearer', 401));
   }
   const token = authHeader.split(' ')[1];
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized: Missing token' });
+    return next(new ErrorResponse('Unauthorized: Missing token', 401));
   }
   try {
     // Replace 'your_jwt_secret' with your actual secret or public key
@@ -23,17 +24,6 @@ export const authenticateJWT = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Unauthorized: Invalid or expired token', details: err.message });
+    return next(new ErrorResponse('Unauthorized: Invalid or expired token', 401));
   }
-};
-
-/**
- * Middleware to require a specific user role (e.g., 'admin').
- * Responds with 403 Forbidden if the user does not have the required role.
- */
-export const requireRole = (role) => (req, res, next) => {
-  if (!req.user || !req.user.roles?.includes(role)) {
-    return res.status(403).json({ error: 'Forbidden: admin only' });
-  }
-  next();
 };
