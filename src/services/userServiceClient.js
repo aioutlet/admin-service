@@ -25,7 +25,6 @@ export const fetchUserById = async (id, token) => {
     const res = await axios.get(`${USER_SERVICE_BASE_URL}/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(res.data);
     return res.data;
   } catch (err) {
     // Log the error details for debugging
@@ -35,54 +34,13 @@ export const fetchUserById = async (id, token) => {
 };
 
 /**
- * Update a user's profile by ID in the user-service.
- * Accepts a data object with fields to update.
+ * Update a user's profile, password, or activation by ID in the user-service.
+ * Accepts a data object with fields to update (e.g., { name, password, isActive }).
  */
 export const updateUserById = async (id, data, token) => {
   const res = await axios.patch(`${USER_SERVICE_BASE_URL}/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data;
-};
-
-/**
- * Update a user's password by ID in the user-service.
- * Accepts a data object with the new password.
- */
-export const updateUserPasswordById = async (id, data, token) => {
-  const res = await axios.post(`${USER_SERVICE_BASE_URL}/${id}/password/change`, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
-};
-
-/**
- * Activate a user account by ID in the user-service.
- */
-export const activateUserById = async (id, token) => {
-  // Admin: activate user by ID
-  const res = await axios.patch(
-    `${USER_SERVICE_BASE_URL}/${id}`,
-    { isActive: true },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-  return res.data;
-};
-
-/**
- * Deactivate a user account by ID in the user-service.
- */
-export const deactivateUserById = async (id, token) => {
-  // Admin: deactivate user by ID
-  const res = await axios.patch(
-    `${USER_SERVICE_BASE_URL}/${id}`,
-    { isActive: false },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
   return res.data;
 };
 
