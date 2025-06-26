@@ -1,12 +1,15 @@
 import express from 'express';
+
 import adminRoutes from './routes/admin.routes.js';
+import homeRoutes from './routes/home.routes.js';
 import logger from './utils/logger.js';
 
 const app = express();
 app.use(express.json());
 
-// Mount admin routes
-app.use('/admin', adminRoutes);
+// Mount routes
+app.use('/api/home', homeRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handler (simple version)
 app.use((err, req, res, next) => {
