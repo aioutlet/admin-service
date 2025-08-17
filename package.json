@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/aioutlet/admin-service#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-env": "^7.28.3",
     "babel-jest": "^30.0.2",
     "jest": "^30.0.2",
     "nodemon": "^3.1.10"
