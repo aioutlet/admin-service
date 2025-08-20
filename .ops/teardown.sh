@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Admin Service - Environment Teardown Script
-# This script tears down the admin-service for any environment
+# Admin Service - Teardown Script
+# This script tears down the admin-service (simplified configuration)
 
 set -e  # Exit on any error
-
-# Environment is mandatory
-TARGET_ENV=""
 
 # Teardown options
 REMOVE_VOLUMES=false
@@ -35,10 +32,7 @@ print_status() {
 
 # Function to show help
 show_help() {
-    echo -e "${YELLOW}Usage: $0 -e ENV_NAME [OPTIONS]${NC}"
-    echo ""
-    echo -e "${YELLOW}Required:${NC}"
-    echo "  -e, --env ENV_NAME    Target environment (development, production, staging, testing)"
+    echo -e "${YELLOW}Usage: $0 [OPTIONS]${NC}"
     echo ""
     echo -e "${YELLOW}Options:${NC}"
     echo "  -v, --volumes         Remove volumes (⚠️  DATA LOSS!)"
@@ -47,15 +41,13 @@ show_help() {
     echo "  -f, --force           Force removal without confirmation"
     echo "  -h, --help           Show this help message"
     echo ""
+    echo -e "${GREEN}This uses simplified configuration - no environment parameter needed${NC}"
+    echo ""
 }
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -e|--env)
-            TARGET_ENV="$2"
-            shift 2
-            ;;
         -v|--volumes)
             REMOVE_VOLUMES=true
             shift
@@ -84,25 +76,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validate required parameters
-if [ -z "$TARGET_ENV" ]; then
-    echo -e "${RED}❌ Error: Environment parameter is required${NC}"
-    show_help
-    exit 1
-fi
-
-# Validate environment value
-case $TARGET_ENV in
-    development|staging|production|testing)
-        ;;
-    *)
-        echo -e "${RED}❌ Error: Invalid environment: $TARGET_ENV${NC}"
-        echo -e "${YELLOW}Valid environments: development, staging, production, testing${NC}"
-        exit 1
-        ;;
-esac
-
-print_status $BLUE "🧹 Starting $SERVICE_NAME teardown for $TARGET_ENV environment..."
+print_status $BLUE "🧹 Starting $SERVICE_NAME teardown..."
 
 # Check if docker-compose file exists
 COMPOSE_FILE="$SERVICE_DIR/docker-compose.yml"
@@ -110,9 +84,6 @@ if [ -f "$COMPOSE_FILE" ]; then
     print_status $BLUE "📦 Found docker-compose.yml, stopping services..."
     
     cd "$SERVICE_DIR"
-    
-    # Set environment-specific project name
-    export COMPOSE_PROJECT_NAME="${SERVICE_NAME}-${TARGET_ENV}"
     
     # Stop and remove containers
     if docker-compose down; then
@@ -130,8 +101,8 @@ if [ -f "$COMPOSE_FILE" ]; then
     # Remove networks if requested
     if [ "$REMOVE_NETWORKS" = true ]; then
         print_status $BLUE "🌐 Removing networks..."
-        # Remove custom networks (default networks are handled by docker-compose down)
-        docker network ls --filter name="${COMPOSE_PROJECT_NAME}" -q | xargs -r docker network rm || true
+        # Remove custom networks
+        docker network ls --filter name="admin-network" -q | xargs -r docker network rm || true
     fi
     
     # Remove images if requested
@@ -143,15 +114,15 @@ else
     print_status $YELLOW "⚠️  No docker-compose.yml found, attempting manual cleanup..."
     
     # Try to remove containers with service name pattern
-    CONTAINERS=$(docker ps -aq --filter "name=${SERVICE_NAME}-${TARGET_ENV}" 2>/dev/null || true)
+    CONTAINERS=$(docker ps -aq --filter "name=${SERVICE_NAME}" 2>/dev/null || true)
     if [ -n "$CONTAINERS" ]; then
         print_status $BLUE "Stopping containers..."
         docker stop $CONTAINERS >/dev/null 2>&1 || true
         docker rm $CONTAINERS >/dev/null 2>&1 || true
         print_status $GREEN "✅ Manual container cleanup completed"
     else
-        print_status $BLUE "No containers found matching ${SERVICE_NAME}-${TARGET_ENV}"
+        print_status $BLUE "No containers found matching ${SERVICE_NAME}"
     fi
 fi
 
-print_status $GREEN "🧹 $SERVICE_NAME teardown completed for $TARGET_ENV environment"
+print_status $GREEN "🧹 $SERVICE_NAME teardown completed"
