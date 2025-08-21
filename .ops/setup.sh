@@ -204,17 +204,35 @@ main() {
     verify_setup
     echo ""
     
+    # Step 4: Start services with Docker Compose
+    log_info "🐳 Starting services with Docker Compose..."
+    if docker-compose up -d; then
+        log_success "Services started successfully"
+        echo ""
+        log_info "⏳ Waiting for services to be ready..."
+        sleep 10
+        
+        # Check service health
+        if docker-compose ps | grep -q "Up.*healthy"; then
+            log_success "Services are healthy and ready"
+        else
+            log_warning "Services may still be starting up"
+        fi
+    else
+        log_error "Failed to start services with Docker Compose"
+        return 1
+    fi
+    echo ""
+    
     log_success "🎉 $SERVICE_NAME setup completed successfully!"
     echo ""
-    log_info "💡 Next steps:"
-    echo "  • Start development: npm run dev"
-    echo "  • Start with Docker: docker-compose up"
-    echo "  • Run tests: npm test"
-    echo "  • View logs: Check the logs directory"
+    log_info "💡 Service is now running:"
+    echo "  • Docker containers: docker-compose ps"
+    echo "  • View logs: docker-compose logs -f"
+    echo "  • Stop services: bash .ops/teardown.sh"
     echo ""
     log_info "🔗 Service endpoints:"
-    echo "  • Local dev: http://localhost:${PORT:-3010}"
-    echo "  • Docker: http://localhost:3010 (docker-compose)"
+    echo "  • Service: http://localhost:3010"
 }
 
 # Execute main function
