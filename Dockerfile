@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 
 # Copy package files
@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 # Production stage
-FROM node:20-alpine AS runtime
+FROM node:24-alpine AS runtime
 WORKDIR /app
 
 # Install dumb-init for proper signal handling
