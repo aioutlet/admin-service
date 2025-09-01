@@ -1,4 +1,4 @@
-import logger from '../utils/logger.js';
+import logger from '../observability/index.js';
 import asyncHandler from '../middlewares/asyncHandler.js';
 import { fetchAllUsers, fetchUserById, updateUserById, removeUserById } from '../services/userServiceClient.js';
 import adminValidator from '../validators/admin.validator.js';
