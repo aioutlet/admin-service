@@ -45,20 +45,6 @@ app.get('/metrics', metrics); // Basic metrics
 // Centralized error handler for consistent error responses
 app.use((err, req, res, _next) => {
   const status = err.status || 500;
-
-  // Log error with observability context
-  logger.error('Application error occurred', {
-    error: err.message,
-    stack: err.stack,
-    status,
-    path: req.path,
-    method: req.method,
-    correlationId: req.correlationId,
-    userId: req.user?.id,
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-  });
-
   res.status(status).json({
     error: {
       code: err.code || 'INTERNAL_ERROR',
