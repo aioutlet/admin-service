@@ -1,8 +1,8 @@
 import { trace } from '@opentelemetry/api';
-import { isTracingEnabled } from './setup.js';
+import { isTracingEnabled } from './init.js';
 
 /**
- * Tracing helper functions
+ * Tracing context management functions
  */
 
 /**

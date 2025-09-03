@@ -1,6 +1,6 @@
 import winston from 'winston';
 import { LOG_LEVELS, DEFAULT_CONFIG, ENVIRONMENT_CONFIGS, validateLogEntry } from './schemas.js';
-import { createJsonFormat, createConsoleFormat } from './formatters.js';
+import { createJsonFormat, createConsoleFormat } from './log.formatters.js';
 
 /**
  * Logger class implementing the unified logging schema

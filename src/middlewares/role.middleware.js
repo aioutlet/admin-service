@@ -1,4 +1,4 @@
-import ErrorResponse from '../utils/ErrorResponse.js';
+import ErrorResponse from '../utils/error.response.js';
 
 // Middleware to require one or more user roles (e.g., 'admin')
 export function requireRole(...roles) {

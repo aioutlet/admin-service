@@ -1,7 +1,7 @@
 import winston from 'winston';
-import { colorizeLevel } from '../../utils/colorize.js';
+import { colorizeLevel } from '../../utils/console.colorizer.js';
 import { createBaseLogEntry } from './schemas.js';
-import { getTracingContext } from '../tracing/helpers.js';
+import { getTracingContext } from '../tracing/tracing.context.js';
 
 /**
  * Log formatters for different output types

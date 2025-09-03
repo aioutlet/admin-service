@@ -30,7 +30,7 @@ const loadEnvironmentConfig = () => {
 loadEnvironmentConfig();
 
 // Initialize tracing BEFORE importing the application
-import './tracing-init.js';
+import './observability/tracing/init.js';
 
 // Now import and start the application
 await import('./app.js');

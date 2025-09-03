@@ -4,7 +4,11 @@
  */
 
 import logger from '../observability/index.js';
-import { performReadinessCheck, performLivenessCheck, getSystemMetrics } from '../utils/healthChecks.js';
+import {
+  performReadinessCheck,
+  performLivenessCheck,
+  getSystemMetrics,
+} from '../observability/monitoring/health.checks.js';
 
 /**
  * Main health check endpoint

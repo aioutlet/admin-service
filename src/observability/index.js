@@ -24,3 +24,12 @@ export {
   getTracingContext,
   createOperationSpan,
 } from './tracing/index.js';
+
+// Monitoring exports
+export {
+  checkDatabaseHealth,
+  checkExternalServiceHealth,
+  performReadinessCheck,
+  performLivenessCheck,
+  getSystemMetrics,
+} from './monitoring/index.js';

@@ -4,8 +4,8 @@
  */
 
 import mongoose from 'mongoose';
-import config from '../config/index.js';
-import logger from '../observability/index.js';
+import config from '../../config/index.js';
+import logger from '../index.js';
 
 /**
  * Check MongoDB database connectivity

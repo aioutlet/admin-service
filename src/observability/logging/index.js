@@ -17,4 +17,4 @@ export { Logger };
 export { LOG_LEVELS, DEFAULT_CONFIG, ENVIRONMENT_CONFIGS, validateLogEntry, createBaseLogEntry } from './schemas.js';
 
 // Export formatters
-export { createJsonFormat, createConsoleFormat } from './formatters.js';
+export { createJsonFormat, createConsoleFormat } from './log.formatters.js';

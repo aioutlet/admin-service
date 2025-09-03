@@ -3,8 +3,8 @@
  * Provides centralized access to all tracing functionality
  */
 
-// Setup functions
-export { initializeTracing, shutdownTracing, isTracingEnabled } from './setup.js';
+// Initialization functions
+export { initializeTracing, shutdownTracing, isTracingEnabled } from './init.js';
 
-// Helper functions
-export { getTracingContext, createOperationSpan, getServiceInfo } from './helpers.js';
+// Context management functions
+export { getTracingContext, createOperationSpan, getServiceInfo } from './tracing.context.js';
