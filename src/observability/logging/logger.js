@@ -182,11 +182,14 @@ class Logger {
       return null;
     }
 
+    // Environment-based error processing
+    const isDevelopment = this.config.environment === 'development' || this.config.environment === 'local';
+
     if (error instanceof Error) {
       return {
         name: error.name,
         message: error.message,
-        stack: error.stack,
+        stack: isDevelopment ? error.stack : 'Stack trace hidden in production',
       };
     }
 
