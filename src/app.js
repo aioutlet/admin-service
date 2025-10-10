@@ -7,10 +7,7 @@ import adminRoutes from './routes/admin.routes.js';
 import homeRoutes from './routes/home.routes.js';
 import logger from './observability/index.js';
 import correlationIdMiddleware from './middlewares/correlationId.middleware.js';
-import rateLimitMiddleware from './middlewares/rateLimit.middleware.js';
 import { health, readiness, liveness, metrics } from './controllers/operational.controller.js';
-
-const { generalRateLimit } = rateLimitMiddleware;
 
 const app = express();
 
@@ -23,11 +20,6 @@ app.use(
 );
 
 app.use(correlationIdMiddleware); // Add correlation ID middleware first
-
-// Apply general rate limiting (will be skipped for health checks automatically)
-if (config.security.enableRateLimiting) {
-  app.use(generalRateLimit);
-}
 
 app.use(express.json());
 app.use(cookieParser());
