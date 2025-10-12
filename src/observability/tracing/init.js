@@ -18,16 +18,14 @@ let sdk = null;
  */
 function initializeTracing() {
   if (!enableTracing) {
-    console.log('Tracing disabled for admin-service environment:', environment);
     return false;
   }
 
   if (sdk) {
-    console.log('OpenTelemetry tracing already initialized for admin-service');
     return true; // Already initialized
   }
 
-  console.log('Initializing OpenTelemetry tracing for admin-service...');
+  console.log('[TRACING] Initializing OpenTelemetry tracing...');
 
   try {
     sdk = new NodeSDK({
@@ -48,7 +46,7 @@ function initializeTracing() {
     });
 
     sdk.start();
-    console.log('✅ OpenTelemetry tracing initialized successfully for admin-service');
+    console.log('[TRACING] ✅ OpenTelemetry tracing initialized successfully');
 
     // Graceful shutdown
     process.on('SIGTERM', () => {
@@ -62,7 +60,7 @@ function initializeTracing() {
 
     return true;
   } catch (error) {
-    console.warn('⚠️ Failed to initialize OpenTelemetry for admin-service:', error.message);
+    console.warn('[TRACING] ⚠️  Failed to initialize OpenTelemetry:', error.message);
     return false;
   }
 }

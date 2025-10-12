@@ -50,7 +50,6 @@ const config = {
       ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
       : ['http://localhost:3000'],
     enableSecurityHeaders: process.env.ENABLE_SECURITY_HEADERS === 'true',
-    enableRateLimiting: process.env.ENABLE_RATE_LIMITING !== 'false',
   },
 
   // Admin specific settings

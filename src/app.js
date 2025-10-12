@@ -52,7 +52,6 @@ app.listen(config.server.port, config.server.host, () => {
   logger.info(`Server running on ${config.server.host}:${config.server.port}`);
   logger.info(`Environment: ${config.env}`);
   logger.info(`CORS origins: ${config.security.corsOrigin.join(', ')}`);
-  logger.info(`Rate limiting: ${config.security.enableRateLimiting ? 'enabled' : 'disabled'}`);
   logger.info('Admin service is ready to accept connections');
 });
 
