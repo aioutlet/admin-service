@@ -1,0 +1,29 @@
+# Admin Service - API Container
+FROM node:20-alpine AS base
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY src/api ./src/api
+COPY src/shared ./src/shared
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV SERVICE_TYPE=api
+
+# Expose API port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3001/health', (r) => {if(r.statusCode !== 200) throw new Error('Health check failed');})" || exit 1
+
+# Start API
+CMD ["node", "src/api/server.js"]

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import ErrorResponse from '../utils/error.response.js';
+import ErrorResponse from '../../shared/utils/error.response.js';
 
 /**
  * Middleware for JWT authentication in the admin service.

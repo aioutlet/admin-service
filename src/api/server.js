@@ -6,7 +6,7 @@ dotenv.config({ quiet: true });
 // 2. Initialize observability modules (logger, tracing) - uses console.log for bootstrap
 // 3. Start application
 
-import './observability/logging/logger.js';
-import './observability/tracing/init.js';
+import '../shared/observability/logging/logger.js';
+import '../shared/observability/tracing/init.js';
 
 await import('./app.js');

@@ -1,7 +1,7 @@
-import logger from '../observability/index.js';
+import logger from '../../shared/observability/index.js';
 import asyncHandler from '../middlewares/async.handler.js';
-import { fetchAllUsers, fetchUserById, updateUserById, removeUserById } from '../services/user.service.client.js';
-import adminValidator from '../validators/admin.validator.js';
+import { fetchAllUsers, fetchUserById, updateUserById, removeUserById } from '../../shared/services/user.service.client.js';
+import adminValidator from '../../shared/validators/admin.validator.js';
 
 /**
  * @desc    Get all users
