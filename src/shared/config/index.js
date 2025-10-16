@@ -17,22 +17,6 @@ const config = {
     host: process.env.HOST || '0.0.0.0',
   },
 
-  // Database
-  database: {
-    uri: process.env.MONGODB_URI,
-    options: {
-      maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    },
-  },
-
-  // JWT
-  jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES_IN || '24h',
-  },
-
   // External Services
   services: {
     user: process.env.USER_SERVICE_URL || 'http://localhost:3002',
