@@ -19,11 +19,82 @@ export const authenticateJWT = (req, res, next) => {
     return next(new ErrorResponse('Unauthorized: Missing token', 401));
   }
   try {
-    // Replace 'your_jwt_secret' with your actual secret or public key
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
-    req.user = decoded;
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      roles: decoded.roles || [],
+    };
     next();
   } catch (err) {
     return next(new ErrorResponse('Unauthorized: Invalid or expired token', 401));
   }
+};
+
+/**
+ * Middleware to require specific roles
+ * Usage: requireRoles(['admin', 'manager'])
+ */
+export const requireRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return next(new ErrorResponse('Unauthorized: Authentication required', 401));
+    }
+
+    const userRoles = req.user.roles || [];
+    const hasRole = roles.some((role) => userRoles.includes(role));
+
+    if (!hasRole) {
+      return next(
+        new ErrorResponse(`Forbidden: Required roles: ${roles.join(' or ')}. User has: ${userRoles.join(', ')}`, 403)
+      );
+    }
+
+    next();
+  };
+};
+
+/**
+ * Middleware to require admin role
+ */
+export const requireAdmin = (req, res, next) => {
+  return requireRoles('admin')(req, res, next);
+};
+
+/**
+ * Middleware to require superadmin role
+ */
+export const requireSuperAdmin = (req, res, next) => {
+  return requireRoles('superadmin')(req, res, next);
+};
+
+/**
+ * Optional authentication - attaches user if token present but doesn't require it
+ */
+export const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    req.user = null;
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      roles: decoded.roles || [],
+    };
+  } catch (err) {
+    req.user = null;
+  }
+
+  next();
 };
