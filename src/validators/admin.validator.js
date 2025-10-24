@@ -1,7 +1,16 @@
 import mongoose from 'mongoose';
 
-const ALLOWED_ROLES = ['user', 'admin'];
-const ALLOWED_UPDATE_FIELDS = ['name', 'email', 'roles', 'isActive', 'password'];
+const ALLOWED_ROLES = ['user', 'admin', 'customer'];
+const ALLOWED_UPDATE_FIELDS = [
+  'firstName',
+  'lastName',
+  'name',
+  'email',
+  'roles',
+  'isActive',
+  'password',
+  'phoneNumber',
+];
 
 const adminValidator = {
   isValidObjectId(id) {

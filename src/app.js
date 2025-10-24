@@ -36,7 +36,7 @@ app.get('/metrics', metrics); // Basic metrics
 
 // Centralized error handler for consistent error responses
 app.use((err, req, res, _next) => {
-  const status = err.status || 500;
+  const status = err.statusCode || err.status || 500;
   res.status(status).json({
     error: {
       code: err.code || 'INTERNAL_ERROR',

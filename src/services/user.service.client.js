@@ -8,7 +8,7 @@ const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://localhost:5000'
  */
 export const fetchAllUsers = async (adminToken) => {
   // Forward admin JWT to user-service for authentication
-  const res = await axios.get(`${USER_SERVICE_URL}`, {
+  const res = await axios.get(`${USER_SERVICE_URL}/api/admin/users`, {
     headers: {
       Authorization: `Bearer ${adminToken}`,
     },
@@ -22,7 +22,7 @@ export const fetchAllUsers = async (adminToken) => {
  */
 export const fetchUserById = async (id, token) => {
   try {
-    const res = await axios.get(`${USER_SERVICE_URL}/${id}`, {
+    const res = await axios.get(`${USER_SERVICE_URL}/api/admin/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
@@ -38,7 +38,7 @@ export const fetchUserById = async (id, token) => {
  * Accepts a data object with fields to update (e.g., { name, password, isActive }).
  */
 export const updateUserById = async (id, data, token) => {
-  const res = await axios.patch(`${USER_SERVICE_URL}/${id}`, data, {
+  const res = await axios.patch(`${USER_SERVICE_URL}/api/admin/users/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
@@ -48,7 +48,7 @@ export const updateUserById = async (id, data, token) => {
  * Remove (delete) a user by ID in the user-service.
  */
 export const removeUserById = async (id, token) => {
-  const res = await axios.delete(`${USER_SERVICE_URL}/${id}`, {
+  const res = await axios.delete(`${USER_SERVICE_URL}/api/admin/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
