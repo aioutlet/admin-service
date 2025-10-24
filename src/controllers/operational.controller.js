@@ -3,12 +3,13 @@
  * These endpoints are used by monitoring systems, load balancers, and DevOps tools
  */
 
-import logger from '../../shared/observability/index.js';
+import logger from '../observability/index.js';
+import asyncHandler from '../middlewares/async.handler.js';
 import {
   performReadinessCheck,
   performLivenessCheck,
   getSystemMetrics,
-} from '../../shared/observability/monitoring/health.checks.js';
+} from '../observability/monitoring/health.checks.js';
 
 /**
  * Main health check endpoint
