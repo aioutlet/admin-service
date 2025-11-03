@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import config from './config/index.js';
 import adminRoutes from './routes/admin.routes.js';
+import dashboardRoutes from './routes/dashboard.routes.js';
 import homeRoutes from './routes/home.routes.js';
 import logger from './observability/index.js';
 import correlationIdMiddleware from './middlewares/correlationId.middleware.js';
@@ -27,6 +28,7 @@ app.use(cookieParser());
 // Mount routes
 app.use('/api/home', homeRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/dashboard', dashboardRoutes);
 
 // Operational endpoints (for monitoring, load balancers, K8s probes)
 app.get('/health', health); // Main health check
