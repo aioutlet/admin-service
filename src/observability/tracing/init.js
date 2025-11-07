@@ -33,8 +33,8 @@ function initializeTracing() {
         url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces',
         headers: {},
       }),
-      serviceName: process.env.SERVICE_NAME || process.env.OTEL_SERVICE_NAME || 'admin-service',
-      serviceVersion: process.env.SERVICE_VERSION || process.env.OTEL_SERVICE_VERSION || '1.0.0',
+      serviceName: process.env.NAME || process.env.OTEL_SERVICE_NAME || 'admin-service',
+      serviceVersion: process.env.VERSION || process.env.OTEL_SERVICE_VERSION || '1.0.0',
       instrumentations: [
         getNodeAutoInstrumentations({
           // Disable file system instrumentation that can be noisy

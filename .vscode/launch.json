@@ -10,8 +10,8 @@
       "env": {
         "NODE_ENV": "development",
         "PORT": "3010",
-        "SERVICE_NAME": "admin-service",
-        "SERVICE_VERSION": "1.0.0",
+        "NAME": "admin-service",
+        "VERSION": "1.0.0",
         "USER_SERVICE_URL": "http://localhost:3002",
         "AUTH_SERVICE_URL": "http://localhost:3001",
         "JWT_SECRET": "your-jwt-secret-key-at-least-256-bits-long",
@@ -33,8 +33,8 @@
       "env": {
         "NODE_ENV": "development",
         "PORT": "3010",
-        "SERVICE_NAME": "admin-service",
-        "SERVICE_VERSION": "1.0.0",
+        "NAME": "admin-service",
+        "VERSION": "1.0.0",
         "USER_SERVICE_URL": "http://localhost:3002",
         "AUTH_SERVICE_URL": "http://localhost:3001",
         "JWT_SECRET": "your-jwt-secret-key-at-least-256-bits-long",
