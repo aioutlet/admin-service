@@ -6,12 +6,12 @@ import {
   getAnalytics,
 } from '../controllers/dashboard.controller.js';
 import { authenticateJWT } from '../middlewares/auth.middleware.js';
-import { requireRole } from '../middlewares/role.middleware.js';
+import { requireRoles } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // All dashboard routes require authentication and admin role
-router.use(authenticateJWT, requireRole('admin'));
+router.use(authenticateJWT, requireRoles('admin'));
 
 router.get('/stats', getDashboardStats);
 router.get('/recent-orders', getRecentOrders);

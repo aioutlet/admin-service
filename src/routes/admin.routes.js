@@ -1,12 +1,12 @@
 import express from 'express';
 import { getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/admin.controller.js';
 import { authenticateJWT } from '../middlewares/auth.middleware.js';
-import { requireRole } from '../middlewares/role.middleware.js';
+import { requireRoles } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // All admin routes require authentication and admin role
-router.use(authenticateJWT, requireRole('admin'));
+router.use(authenticateJWT, requireRoles('admin'));
 
 router.get('/users', getAllUsers);
 router.get('/users/:id', getUserById);
