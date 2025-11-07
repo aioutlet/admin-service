@@ -9,7 +9,6 @@ import validateConfig from './validators/config.validator.js';
 import config from './core/config.js';
 import logger from './core/logger.js';
 import adminRoutes from './routes/admin.routes.js';
-import dashboardRoutes from './routes/dashboard.routes.js';
 import homeRoutes from './routes/home.routes.js';
 import correlationIdMiddleware from './middlewares/correlationId.middleware.js';
 import { health, readiness, liveness, metrics } from './controllers/operational.controller.js';
@@ -36,7 +35,6 @@ app.use(cookieParser());
 // Routes
 app.use('/api/home', homeRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/admin/dashboard', dashboardRoutes);
 
 // Operational endpoints
 app.get('/health', health);
