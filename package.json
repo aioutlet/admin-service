@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "dapr": "dotenv -e .env -- dapr run --app-id admin-service --app-port 3010 --dapr-http-port 3510 --dapr-grpc-port 50010 --log-level warn --config ./.dapr/config.yaml --resources-path ./.dapr/components -- node src/server.js",
     "test": "jest"
   },
   "repository": {
@@ -32,10 +33,12 @@
   "devDependencies": {
     "@babel/preset-env": "^7.27.2",
     "babel-jest": "^30.0.2",
+    "dotenv-cli": "^8.0.0",
     "jest": "^30.0.2",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
+    "@dapr/dapr": "^3.5.0",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.62.1",
     "@opentelemetry/exporter-trace-otlp-http": "^0.203.0",

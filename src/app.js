@@ -2,11 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import config from './config/index.js';
+import config from './core/config.js';
 import adminRoutes from './routes/admin.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import homeRoutes from './routes/home.routes.js';
-import logger from './observability/index.js';
+import logger from './core/logger.js';
 import correlationIdMiddleware from './middlewares/correlationId.middleware.js';
 import { health, readiness, liveness, metrics } from './controllers/operational.controller.js';
 

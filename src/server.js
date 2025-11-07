@@ -1,9 +1,8 @@
 // Industry-standard initialization pattern:
 // 1. Load environment variables
 // 2. Validate configuration (blocking - must pass)
-// 3. Initialize observability modules (logger, tracing)
-// 4. Check dependency health (non-blocking - log only)
-// 5. Start application
+// 3. Check dependency health (non-blocking - log only)
+// 4. Start application
 
 import dotenv from 'dotenv';
 console.log('Step 1: Loading environment variables...');
@@ -18,13 +17,8 @@ async function startServer() {
     console.log('Step 2: Validating configuration...');
     validateConfig();
 
-    // STEP 3: Initialize observability
-    console.log('Step 3: Initializing observability...');
-    await import('./observability/logging/logger.js');
-    await import('./observability/tracing/init.js');
-
-    // STEP 4: Check dependency health (wait for completion)
-    console.log('Step 4: Checking dependency health...');
+    // STEP 3: Check dependency health (wait for completion)
+    console.log('Step 3: Checking dependency health...');
     const dependencies = getDependencies();
     const dependencyCount = Object.keys(dependencies).length;
 
@@ -40,8 +34,8 @@ async function startServer() {
       console.log('[DEPS] 📝 No dependencies configured for health checking');
     }
 
-    // STEP 5: Start the application
-    console.log('Step 5: Starting admin service...');
+    // STEP 4: Start the application
+    console.log('Step 4: Starting admin service...');
     await import('./app.js');
   } catch (error) {
     console.error('❌ Failed to start admin service:', error.message);

@@ -77,21 +77,24 @@ const validationRules = {
     errorMessage: 'VERSION must be in semantic version format (e.g., 1.0.0)',
   },
 
-  // Service Dependencies
-  USER_SERVICE_URL: {
-    required: true,
-    validator: isValidUrl,
-    errorMessage: 'USER_SERVICE_URL must be a valid URL',
+  // Dapr Configuration
+  DAPR_HOST: {
+    required: false,
+    validator: (value) => !value || value.length > 0,
+    errorMessage: 'DAPR_HOST must be a non-empty string',
+    default: '127.0.0.1',
   },
-  MESSAGE_BROKER_SERVICE_URL: {
-    required: true,
-    validator: isValidUrl,
-    errorMessage: 'MESSAGE_BROKER_SERVICE_URL must be a valid URL',
+  DAPR_HTTP_PORT: {
+    required: false,
+    validator: isValidPort,
+    errorMessage: 'DAPR_HTTP_PORT must be a valid port number',
+    default: '3510',
   },
-  MESSAGE_BROKER_API_KEY: {
-    required: true,
-    validator: (value) => value && value.length > 0,
-    errorMessage: 'MESSAGE_BROKER_API_KEY must be a non-empty string',
+  DAPR_GRPC_PORT: {
+    required: false,
+    validator: isValidPort,
+    errorMessage: 'DAPR_GRPC_PORT must be a valid port number',
+    default: '50010',
   },
 
   // Security Configuration
@@ -144,25 +147,6 @@ const validationRules = {
     validator: (value) => !value || (value.length > 0 && value.includes('.')),
     errorMessage: 'LOG_FILE_PATH must be a valid file path with extension',
     default: './logs/admin-service.log',
-  },
-
-  // Observability Configuration
-  ENABLE_TRACING: {
-    required: false,
-    validator: (value) => ['true', 'false'].includes(value?.toLowerCase()),
-    errorMessage: 'ENABLE_TRACING must be true or false',
-    default: 'false',
-  },
-  OTEL_EXPORTER_OTLP_ENDPOINT: {
-    required: false,
-    validator: (value) => !value || isValidUrl(value),
-    errorMessage: 'OTEL_EXPORTER_OTLP_ENDPOINT must be a valid URL',
-  },
-  CORRELATION_ID_HEADER: {
-    required: false,
-    validator: (value) => !value || (value.length > 0 && /^[a-z-]+$/.test(value)),
-    errorMessage: 'CORRELATION_ID_HEADER must be lowercase with hyphens only',
-    default: 'x-correlation-id',
   },
 };
 

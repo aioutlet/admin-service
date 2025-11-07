@@ -1,5 +1,5 @@
-import { userServiceClient, orderServiceClient } from '../utils/service.client.js';
-import logger from '../observability/index.js';
+import { invokeService } from '../services/dapr.client.js';
+import logger from '../core/logger.js';
 
 /**
  * Get dashboard statistics
@@ -10,12 +10,12 @@ export const getDashboardStats = async (req, res) => {
   try {
     logger.info('Fetching dashboard statistics', { correlationId });
 
-    // Fetch data from multiple services in parallel
+    // Fetch data from multiple services in parallel via Dapr
     const [usersResponse, ordersResponse] = await Promise.allSettled([
-      userServiceClient.client.get('/api/users', {
+      invokeService('user-service', 'api/users', 'GET', null, {
         headers: { 'x-correlation-id': correlationId },
       }),
-      orderServiceClient.client.get('/api/orders', {
+      invokeService('order-service', 'api/orders', 'GET', null, {
         headers: {
           'x-correlation-id': correlationId,
           Authorization: req.headers.authorization,
@@ -32,7 +32,7 @@ export const getDashboardStats = async (req, res) => {
     };
 
     if (usersResponse.status === 'fulfilled') {
-      const users = usersResponse.value.data?.data || [];
+      const users = usersResponse.value?.data || usersResponse.value || [];
       userStats.total = users.length;
       userStats.active = users.filter((u) => u.isActive !== false).length;
 
@@ -56,7 +56,7 @@ export const getDashboardStats = async (req, res) => {
     };
 
     if (ordersResponse.status === 'fulfilled') {
-      const orders = ordersResponse.value.data?.data || [];
+      const orders = ordersResponse.value?.data || ordersResponse.value || [];
       orderStats.total = orders.length;
       orderStats.pending = orders.filter((o) => o.status === 0 || o.status === 'Created').length; // Status 0 = Created
       orderStats.processing = orders.filter((o) => o.status === 1 || o.status === 'Processing').length; // Status 1 = Processing
@@ -130,14 +130,14 @@ export const getRecentOrders = async (req, res) => {
   try {
     logger.info('Fetching recent orders', { correlationId, limit });
 
-    const response = await orderServiceClient.client.get('/api/orders', {
+    const response = await invokeService('order-service', 'api/orders', 'GET', null, {
       headers: {
         'x-correlation-id': correlationId,
         Authorization: req.headers.authorization,
       },
     });
 
-    const orders = response.data?.data || [];
+    const orders = response?.data || response || [];
 
     // Sort by creation date (newest first) and limit
     const recentOrders = orders
@@ -189,11 +189,11 @@ export const getRecentUsers = async (req, res) => {
   try {
     logger.info('Fetching recent users', { correlationId, limit });
 
-    const response = await userServiceClient.client.get('/api/users', {
+    const response = await invokeService('user-service', 'api/users', 'GET', null, {
       headers: { 'x-correlation-id': correlationId },
     });
 
-    const users = response.data?.data || [];
+    const users = response?.data || response || [];
 
     // Sort by creation date (newest first) and limit
     const recentUsers = users
