@@ -1,0 +1,39 @@
+
+> admin-service@1.0.0 test:coverage
+> jest --coverage --testPathIgnorePatterns=tests/e2e
+
+PASS tests/integration/home.routes.test.js
+PASS tests/unit/admin.controller.test.js
+PASS tests/unit/user.service.client.test.js
+PASS tests/integration/admin.routes.test.js
+PASS tests/unit/error.response.test.js
+PASS tests/unit/auth.middleware.test.js
+PASS tests/unit/admin.validator.test.js
+PASS tests/unit/home.controller.test.js
+PASS tests/unit/async.handler.test.js
+-------------------------|---------|----------|---------|---------|-------------------
+File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------|---------|----------|---------|---------|-------------------
+All files                |   97.65 |    90.66 |   96.42 |   99.16 |                   
+ controllers             |     100 |    96.96 |     100 |     100 |                   
+  admin.controller.js    |     100 |      100 |     100 |     100 |                   
+  home.controller.js     |     100 |       75 |     100 |     100 | 6                 
+ middlewares             |   97.77 |    84.61 |   88.88 |   97.67 |                   
+  async.handler.js       |     100 |      100 |     100 |     100 |                   
+  auth.middleware.js     |   97.61 |    84.61 |   85.71 |   97.56 | 68                
+ routes                  |     100 |      100 |     100 |     100 |                   
+  admin.routes.js        |     100 |      100 |     100 |     100 |                   
+  home.routes.js         |     100 |      100 |     100 |     100 |                   
+ services                |     100 |      100 |     100 |     100 |                   
+  user.service.client.js |     100 |      100 |     100 |     100 |                   
+ utils                   |     100 |      100 |     100 |     100 |                   
+  error.response.js      |     100 |      100 |     100 |     100 |                   
+ validators              |   89.47 |     87.5 |     100 |     100 |                   
+  admin.validator.js     |   89.47 |     87.5 |     100 |     100 | 27,35             
+-------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 9 passed, 9 total
+Tests:       75 passed, 75 total
+Snapshots:   0 total
+Time:        2.138 s, estimated 3 s
+Ran all test suites.

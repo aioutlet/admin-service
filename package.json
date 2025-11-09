@@ -14,7 +14,8 @@
     "test": "jest",
     "test:unit": "jest tests/unit",
     "test:integration": "jest tests/integration --runInBand",
-    "test:e2e": "jest tests/e2e --runInBand --testTimeout=30000"
+    "test:e2e": "jest tests/e2e --runInBand --testTimeout=30000",
+    "test:coverage": "jest --coverage --testPathIgnorePatterns=tests/e2e"
   },
   "repository": {
     "type": "git",
