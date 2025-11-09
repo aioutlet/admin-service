@@ -1,11 +1,11 @@
 /**
  * Trace Context Middleware
  * Extracts W3C Trace Context from Dapr's traceparent header
- * 
+ *
  * Dapr automatically injects the traceparent header following W3C Trace Context format:
  * traceparent: version-traceId-spanId-flags
  * Example: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
- * 
+ *
  * This middleware extracts the traceId and spanId for use in logging and event correlation.
  */
 const traceContextMiddleware = (req, res, next) => {
