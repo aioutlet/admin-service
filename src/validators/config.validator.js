@@ -166,14 +166,14 @@ const validateConfig = () => {
 
     // Check if required variable is missing
     if (rule.required && !value) {
-      errors.push(`❌ ${key} is required but not set`);
+      errors.push(`[ERROR] ${key} is required but not set`);
       continue;
     }
 
     // Skip validation if value is not set and not required
     if (!value && !rule.required) {
       if (rule.default) {
-        warnings.push(`⚠️  ${key} not set, using default: ${rule.default}`);
+        warnings.push(`[WARNING] ${key} not set, using default: ${rule.default}`);
         process.env[key] = rule.default;
       }
       continue;
@@ -181,7 +181,7 @@ const validateConfig = () => {
 
     // Validate the value
     if (value && rule.validator && !rule.validator(value)) {
-      errors.push(`❌ ${key}: ${rule.errorMessage}`);
+      errors.push(`[ERROR] ${key}: ${rule.errorMessage}`);
       if (value.length > 100) {
         errors.push(`   Current value: ${value.substring(0, 100)}...`);
       } else {
@@ -197,51 +197,13 @@ const validateConfig = () => {
 
   // If there are errors, log them and throw
   if (errors.length > 0) {
-    console.error('[CONFIG] ❌ Configuration validation failed:');
+    console.error('[CONFIG] Configuration validation failed:');
     errors.forEach((error) => console.error(error));
-    console.error('\n💡 Please check your .env file and ensure all required variables are set correctly.');
+    console.error('\nPlease check your .env file and ensure all required variables are set correctly.');
     throw new Error(`Configuration validation failed with ${errors.length} error(s)`);
   }
 
-  console.log('[CONFIG] ✅ All required environment variables are valid');
-};
-
-/**
- * Gets a validated configuration value
- * Assumes validateConfig() has already been called
- * @param {string} key - The configuration key
- * @returns {string} - The configuration value
- */
-const getConfig = (key) => {
-  return process.env[key];
-};
-
-/**
- * Gets a validated configuration value as boolean
- * @param {string} key - The configuration key
- * @returns {boolean} - The configuration value as boolean
- */
-const getConfigBoolean = (key) => {
-  return process.env[key]?.toLowerCase() === 'true';
-};
-
-/**
- * Gets a validated configuration value as number
- * @param {string} key - The configuration key
- * @returns {number} - The configuration value as number
- */
-const getConfigNumber = (key) => {
-  return parseInt(process.env[key], 10);
-};
-
-/**
- * Gets a validated configuration value as array (comma-separated)
- * @param {string} key - The configuration key
- * @returns {string[]} - The configuration value as array
- */
-const getConfigArray = (key) => {
-  return process.env[key]?.split(',').map((item) => item.trim()) || [];
+  console.log('[CONFIG] [SUCCESS] All required environment variables are valid');
 };
 
 export default validateConfig;
-export { getConfig, getConfigBoolean, getConfigNumber, getConfigArray };

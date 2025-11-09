@@ -14,7 +14,8 @@ import { performReadinessCheck, performLivenessCheck, getSystemMetrics } from '.
 export async function health(req, res) {
   try {
     logger.debug('Health check requested', {
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
     });
@@ -29,7 +30,8 @@ export async function health(req, res) {
   } catch (error) {
     logger.error('Health check failed', {
       error: error.message,
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
     });
 
     res.status(500).json({
@@ -48,7 +50,8 @@ export async function health(req, res) {
 export async function readiness(req, res) {
   try {
     logger.debug('Readiness probe requested', {
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
       ip: req.ip,
     });
 
@@ -59,7 +62,8 @@ export async function readiness(req, res) {
     logger.info('Readiness check completed', {
       status: readinessResult.status,
       totalCheckTime: readinessResult.totalCheckTime,
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
     });
 
     res.status(statusCode).json({
@@ -70,7 +74,8 @@ export async function readiness(req, res) {
     logger.error('Readiness check failed', {
       error: error.message,
       stack: error.stack,
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
     });
 
     res.status(503).json({
@@ -90,7 +95,8 @@ export async function readiness(req, res) {
 export async function liveness(req, res) {
   try {
     logger.debug('Liveness probe requested', {
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
       ip: req.ip,
     });
 
@@ -102,7 +108,8 @@ export async function liveness(req, res) {
       logger.warn('Liveness check indicates unhealthy state', {
         status: livenessResult.status,
         checks: livenessResult.checks,
-        correlationId: req.correlationId,
+        traceId: res.locals.traceId,
+        spanId: res.locals.spanId,
       });
     }
 
@@ -114,7 +121,8 @@ export async function liveness(req, res) {
     logger.error('Liveness check failed', {
       error: error.message,
       stack: error.stack,
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
     });
 
     res.status(503).json({
@@ -134,7 +142,8 @@ export async function liveness(req, res) {
 export function metrics(req, res) {
   try {
     logger.debug('Metrics requested', {
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
     });
@@ -144,7 +153,8 @@ export function metrics(req, res) {
     // Log business metric: metrics access
     logger.business('Metrics endpoint accessed', {
       endpoint: '/metrics',
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
       userId: req.user?.id,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
@@ -156,7 +166,8 @@ export function metrics(req, res) {
     logger.error('Metrics retrieval failed', {
       error: error.message,
       stack: error.stack,
-      correlationId: req.correlationId,
+      traceId: res.locals.traceId,
+      spanId: res.locals.spanId,
     });
 
     res.status(500).json({

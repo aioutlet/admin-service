@@ -68,7 +68,8 @@ export async function publishEvent(topicName, eventData) {
       source: 'admin-service',
       data: eventData,
       metadata: {
-        correlationId: eventData.correlationId || generateEventId(),
+        traceId: eventData.traceId || 'no-trace',
+        spanId: eventData.spanId || 'no-span',
         version: '1.0',
       },
     };
@@ -77,7 +78,8 @@ export async function publishEvent(topicName, eventData) {
       operation: 'dapr_pubsub',
       topicName,
       eventId: event.eventId,
-      correlationId: event.metadata.correlationId,
+      traceId: event.metadata.traceId,
+      spanId: event.metadata.spanId,
     });
 
     await daprClient.pubsub.publish(DAPR_PUBSUB_NAME, topicName, event);
@@ -86,7 +88,8 @@ export async function publishEvent(topicName, eventData) {
       operation: 'dapr_pubsub',
       topicName,
       eventId: event.eventId,
-      correlationId: event.metadata.correlationId,
+      traceId: event.metadata.traceId,
+      spanId: event.metadata.spanId,
     });
   } catch (error) {
     logger.error('Failed to publish event via Dapr', {
@@ -94,7 +97,8 @@ export async function publishEvent(topicName, eventData) {
       topicName,
       error: error.message,
       errorStack: error.stack,
-      correlationId: eventData?.correlationId,
+      traceId: eventData?.traceId,
+      spanId: eventData?.spanId,
     });
     // Don't throw - graceful degradation (app continues even if event publishing fails)
   }

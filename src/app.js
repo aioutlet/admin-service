@@ -10,7 +10,8 @@ import config from './core/config.js';
 import logger from './core/logger.js';
 import adminRoutes from './routes/admin.routes.js';
 import homeRoutes from './routes/home.routes.js';
-import correlationIdMiddleware from './middlewares/correlationId.middleware.js';
+import traceContextMiddleware from './middlewares/traceContext.middleware.js';
+import errorHandler from './middlewares/errorHandler.middleware.js';
 import { health, readiness, liveness, metrics } from './controllers/operational.controller.js';
 
 // Validate configuration before starting
@@ -28,7 +29,7 @@ app.use(
   })
 );
 
-app.use(correlationIdMiddleware);
+app.use(traceContextMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -43,30 +44,7 @@ app.get('/health/live', liveness);
 app.get('/metrics', metrics);
 
 // Centralized error handler
-app.use((err, req, res, _next) => {
-  const status = err.statusCode || err.status || 500;
-  const correlationId = req.correlationId || 'no-correlation';
-
-  logger.error(`Request failed: ${req.method} ${req.originalUrl} - ${err.message || 'Unknown error'}`, {
-    correlationId,
-    method: req.method,
-    url: req.originalUrl,
-    status,
-    errorCode: err.code || 'INTERNAL_ERROR',
-    errorMessage: err.message,
-    errorStack: err.stack,
-    userId: req.user?.id,
-  });
-
-  res.status(status).json({
-    error: {
-      code: err.code || 'INTERNAL_ERROR',
-      message: err.message || 'Internal server error',
-      details: err.details || null,
-      traceId: req.traceId || null,
-    },
-  });
-});
+app.use(errorHandler);
 
 const PORT = config.server.port;
 const HOST = config.server.host;
