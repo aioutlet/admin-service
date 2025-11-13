@@ -3,7 +3,6 @@ dotenv.config({ quiet: true });
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
 
 import validateConfig from './validators/config.validator.js';
 import config from './core/config.js';
@@ -20,14 +19,6 @@ const app = express();
 
 // Trust proxy for accurate IP address extraction
 app.set('trust proxy', true);
-
-// Apply CORS before other middlewares
-app.use(
-  cors({
-    origin: config.security.corsOrigin,
-    credentials: true,
-  })
-);
 
 app.use(traceContextMiddleware);
 app.use(express.json());

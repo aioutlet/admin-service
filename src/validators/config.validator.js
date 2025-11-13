@@ -104,19 +104,6 @@ const validationRules = {
     errorMessage: 'JWT_SECRET must be at least 32 characters long',
   },
 
-  // CORS Configuration
-  CORS_ORIGINS: {
-    required: true,
-    validator: (value) => {
-      if (!value) {
-        return false;
-      }
-      const origins = value.split(',').map((o) => o.trim());
-      return origins.every((origin) => origin === '*' || isValidUrl(origin));
-    },
-    errorMessage: 'CORS_ORIGINS must be a comma-separated list of valid URLs or *',
-  },
-
   // Logging Configuration
   LOG_LEVEL: {
     required: false,

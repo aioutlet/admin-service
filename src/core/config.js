@@ -30,9 +30,6 @@ const config = {
   // Security
   security: {
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS, 10) || 12,
-    corsOrigin: process.env.CORS_ORIGIN
-      ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
-      : ['http://localhost:3000'],
     enableSecurityHeaders: process.env.ENABLE_SECURITY_HEADERS === 'true',
   },
 

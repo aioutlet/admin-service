@@ -4,22 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "🟠 Direct",
-      "runtimeExecutable": "node",
-      "program": "${workspaceFolder}/src/server.js",
-      "envFile": "${workspaceFolder}/.env",
-      "env": {
-        "NODE_ENV": "development",
-        "PORT": "1003"
-      },
-      "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"],
-      "preLaunchTask": "Kill Port 1003"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "🚀 Dapr",
+      "name": "Debug",
       "runtimeExecutable": "node",
       "program": "${workspaceFolder}/src/server.js",
       "envFile": "${workspaceFolder}/.env",
