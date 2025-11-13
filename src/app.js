@@ -9,9 +9,9 @@ import config from './core/config.js';
 import logger from './core/logger.js';
 import adminRoutes from './routes/admin.routes.js';
 import homeRoutes from './routes/home.routes.js';
+import operationalRoutes from './routes/operational.routes.js';
 import traceContextMiddleware from './middlewares/traceContext.middleware.js';
 import errorHandler from './middlewares/errorHandler.middleware.js';
-import { health, readiness, liveness, metrics } from './controllers/operational.controller.js';
 
 // Validate configuration before starting
 validateConfig();
@@ -25,14 +25,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/api/home', homeRoutes);
+app.use('/', homeRoutes);
+app.use('/', operationalRoutes);
 app.use('/api/admin', adminRoutes);
-
-// Operational endpoints
-app.get('/health', health);
-app.get('/health/ready', readiness);
-app.get('/health/live', liveness);
-app.get('/metrics', metrics);
 
 // Centralized error handler
 app.use(errorHandler);
