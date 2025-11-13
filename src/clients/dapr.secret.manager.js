@@ -9,10 +9,12 @@ import logger from '../core/logger.js';
 
 class DaprSecretManager {
   constructor() {
-    this.daprEnabled = (process.env.DAPR_ENABLED || 'true').toLowerCase() === 'true';
     this.environment = process.env.NODE_ENV || 'development';
     this.daprHost = process.env.DAPR_HOST || '127.0.0.1';
-    this.daprPort = process.env.DAPR_HTTP_PORT || '3510';
+    this.daprPort = process.env.DAPR_HTTP_PORT || '3503';
+    
+    // Auto-detect Dapr availability by checking if Dapr sidecar is running
+    this.daprAvailable = null; // Will be checked on first use
 
     // Use appropriate secret store based on environment
     if (this.environment === 'production') {
@@ -23,10 +25,49 @@ class DaprSecretManager {
 
     logger.info('Secret manager initialized', {
       event: 'secret_manager_init',
-      daprEnabled: this.daprEnabled,
       environment: this.environment,
       secretStore: this.secretStoreName,
     });
+  }
+
+  /**
+   * Check if Dapr sidecar is available
+   * @returns {Promise<boolean>}
+   */
+  async _checkDaprAvailability() {
+    // Cache the result
+    if (this.daprAvailable !== null) {
+      return this.daprAvailable;
+    }
+
+    try {
+      const fetch = (await import('node-fetch')).default;
+      logger.debug(`Checking Dapr availability on port ${this.daprPort}`, {
+        event: 'dapr_health_check',
+        port: this.daprPort,
+      });
+
+      const response = await fetch(`http://${this.daprHost}:${this.daprPort}/v1.0/healthz`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(500),
+      });
+
+      this.daprAvailable = response.status === 204;
+      logger.info(`Dapr health check result: ${this.daprAvailable}`, {
+        event: 'dapr_health_check_result',
+        available: this.daprAvailable,
+        status: response.status,
+      });
+
+      return this.daprAvailable;
+    } catch (error) {
+      this.daprAvailable = false;
+      logger.info(`Dapr not available: ${error.message}`, {
+        event: 'dapr_health_check_failed',
+        error: error.message,
+      });
+      return false;
+    }
   }
 
   /**
@@ -39,8 +80,11 @@ class DaprSecretManager {
    * 2. Environment variable (fallback)
    */
   async getSecret(secretName) {
-    // If Dapr is disabled, use environment variables
-    if (!this.daprEnabled) {
+    // Check if Dapr is available
+    const daprAvailable = await this._checkDaprAvailability();
+
+    // If Dapr is not available, use environment variables
+    if (!daprAvailable) {
       const value = process.env[secretName];
       if (value) {
         logger.debug('Retrieved secret from environment', {

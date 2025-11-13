@@ -37,11 +37,11 @@ RUN mkdir -p logs && chown -R adminuser:nodejs logs
 USER adminuser
 
 # Expose port
-EXPOSE 3010
+EXPOSE 1003
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:3010/health || exit 1
+    CMD curl -f http://localhost:1003/health || exit 1
 
 # Use dumb-init and start development server
 ENTRYPOINT ["dumb-init", "--"]
@@ -79,11 +79,11 @@ RUN rm -rf tests/ .git/ .github/ .vscode/ *.md .env.* docker-compose* .ops/
 USER adminuser
 
 # Expose port
-EXPOSE 3010
+EXPOSE 1003
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:3010/health || exit 1
+    CMD curl -f http://localhost:1003/health || exit 1
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]

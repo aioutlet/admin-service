@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "dapr": "cross-env DAPR_ENABLED=true dotenv -e .env -- dapr run --app-id admin-service --app-port 3010 --dapr-http-port 3510 --dapr-grpc-port 50010 --log-level warn --config ./.dapr/config.yaml --resources-path ./.dapr/components -- node src/server.js",
+    "dapr": "dotenv -e .env -- dapr run --app-id admin-service --app-port 1003 --dapr-http-port 3503 --dapr-grpc-port 50003 --log-level warn --config ./.dapr/config.yaml --resources-path ./.dapr/components -- node src/server.js",
     "test": "jest",
     "test:unit": "jest tests/unit",
     "test:integration": "jest tests/integration --runInBand",

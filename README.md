@@ -45,6 +45,8 @@ The microservice is designed to be deployed independently and can run locally, v
 - Node.js v16+
 - MongoDB instance (local, Docker, or cloud)
 - A running user-service instance (for user management APIs)
+- Service runs on port **1003**
+- Dapr HTTP port: **3503**, gRPC port: **50003**
 
 ### Environment Variables
 
@@ -52,8 +54,11 @@ Create a `.env` file in the root with the following variables:
 
 ```env
 # .env.example for admin-service
-USER_SERVICE_URL=http://localhost:5000/users
+PORT=1003
+USER_SERVICE_URL=http://localhost:1002/api/users
 USER_SERVICE_SECRET=your-shared-secret
+DAPR_HTTP_PORT=3503
+DAPR_GRPC_PORT=50003
 
 ```
 

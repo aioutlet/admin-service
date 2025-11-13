@@ -2,7 +2,7 @@ import { DaprClient, CommunicationProtocolEnum } from '@dapr/dapr';
 import logger from '../core/logger.js';
 
 const DAPR_HOST = process.env.DAPR_HOST || 'localhost';
-const DAPR_HTTP_PORT = process.env.DAPR_HTTP_PORT || '3510';
+const DAPR_HTTP_PORT = process.env.DAPR_HTTP_PORT || '3503';
 const DAPR_PUBSUB_NAME = process.env.DAPR_PUBSUB_NAME || 'rabbitmq-pubsub';
 
 // Initialize Dapr client
