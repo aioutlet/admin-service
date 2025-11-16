@@ -1,12 +1,23 @@
 import jwt from 'jsonwebtoken';
 import ErrorResponse from '../utils/error.response.js';
+import { getJwtConfig } from '../clients/index.js';
+
+// Cache JWT config to avoid repeated Dapr calls
+let _jwtConfigCache = null;
+
+async function getCachedJwtConfig() {
+  if (_jwtConfigCache === null) {
+    _jwtConfigCache = await getJwtConfig();
+  }
+  return _jwtConfigCache;
+}
 
 /**
  * Middleware for JWT authentication in the admin service.
  * Verifies the Authorization header, decodes the JWT, and attaches the user payload to req.user.
  * Responds with 401 Unauthorized if the token is missing or invalid.
  */
-export const authenticateJWT = (req, res, next) => {
+export const authenticateJWT = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return next(new ErrorResponse('Unauthorized: Missing Authorization header', 401));
@@ -19,7 +30,8 @@ export const authenticateJWT = (req, res, next) => {
     return next(new ErrorResponse('Unauthorized: Missing token', 401));
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
+    const jwtConfig = await getCachedJwtConfig();
+    const decoded = jwt.verify(token, jwtConfig.secret);
     req.user = {
       id: decoded.id,
       email: decoded.email,
@@ -71,7 +83,7 @@ export const requireSuperAdmin = (req, res, next) => {
 /**
  * Optional authentication - attaches user if token present but doesn't require it
  */
-export const optionalAuth = (req, res, next) => {
+export const optionalAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -86,7 +98,8 @@ export const optionalAuth = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
+    const jwtConfig = await getCachedJwtConfig();
+    const decoded = jwt.verify(token, jwtConfig.secret);
     req.user = {
       id: decoded.id,
       email: decoded.email,
