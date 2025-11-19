@@ -98,11 +98,7 @@ const validationRules = {
   },
 
   // Security Configuration
-  JWT_SECRET: {
-    required: true,
-    validator: (value) => value && value.length >= 32,
-    errorMessage: 'JWT_SECRET must be at least 32 characters long',
-  },
+  // Note: JWT_SECRET is fetched from Dapr secret store at runtime, not from env vars
 
   // Logging Configuration
   LOG_LEVEL: {

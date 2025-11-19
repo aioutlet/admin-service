@@ -62,3 +62,13 @@ export const removeUserById = async (id, token) => {
 
   return await invokeService(USER_SERVICE_APP_ID, `api/admin/users/${id}`, 'DELETE', null, metadata);
 };
+
+// Export a default object containing all the client functions
+export const userServiceClient = {
+  fetchAllUsers,
+  fetchUserById,
+  updateUserById,
+  removeUserById,
+};
+
+export default userServiceClient;
