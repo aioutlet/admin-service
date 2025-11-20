@@ -1,4 +1,4 @@
-import { invokeService } from './dapr.service.client.js';
+import { invokeService } from '../core/daprClient.js';
 
 const USER_SERVICE_APP_ID = 'user-service';
 

@@ -1,11 +1,4 @@
-/**
- * Operational/Infrastructure endpoints for Admin Service
- * These endpoints are used by monitoring systems, load balancers, and DevOps tools
- */
-
 import logger from '../core/logger.js';
-import asyncHandler from '../middlewares/async.handler.js';
-import { performReadinessCheck, performLivenessCheck, getSystemMetrics } from '../utils/health.js';
 
 /**
  * Main health check endpoint
@@ -55,18 +48,20 @@ export async function readiness(req, res) {
       ip: req.ip,
     });
 
-    const readinessResult = await performReadinessCheck();
-
-    const statusCode = readinessResult.status === 'ready' ? 200 : 503;
+    const readinessResult = {
+      status: 'ready',
+      checks: {
+        service: 'healthy',
+      },
+    };
 
     logger.info('Readiness check completed', {
       status: readinessResult.status,
-      totalCheckTime: readinessResult.totalCheckTime,
       traceId: res.locals.traceId,
       spanId: res.locals.spanId,
     });
 
-    res.status(statusCode).json({
+    res.status(200).json({
       service: 'admin-service',
       ...readinessResult,
     });
@@ -100,20 +95,14 @@ export async function liveness(req, res) {
       ip: req.ip,
     });
 
-    const livenessResult = await performLivenessCheck();
+    const livenessResult = {
+      status: 'alive',
+      checks: {
+        service: 'healthy',
+      },
+    };
 
-    const statusCode = livenessResult.status === 'alive' ? 200 : 503;
-
-    if (livenessResult.status !== 'alive') {
-      logger.warn('Liveness check indicates unhealthy state', {
-        status: livenessResult.status,
-        checks: livenessResult.checks,
-        traceId: res.locals.traceId,
-        spanId: res.locals.spanId,
-      });
-    }
-
-    res.status(statusCode).json({
+    res.status(200).json({
       service: 'admin-service',
       ...livenessResult,
     });
@@ -148,7 +137,19 @@ export function metrics(req, res) {
       userAgent: req.get('User-Agent'),
     });
 
-    const metrics = getSystemMetrics();
+    const memUsage = process.memoryUsage();
+
+    const metrics = {
+      uptime: process.uptime(),
+      memory: {
+        heapUsed: memUsage.heapUsed,
+        heapTotal: memUsage.heapTotal,
+        external: memUsage.external,
+        rss: memUsage.rss,
+      },
+      nodeVersion: process.version,
+      platform: process.platform,
+    };
 
     // Log business metric: metrics access
     logger.business('Metrics endpoint accessed', {

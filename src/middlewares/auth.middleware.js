@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken';
 import ErrorResponse from '../utils/error.response.js';
-import { getJwtConfig } from '../clients/index.js';
+import { getJwtConfig } from '../core/secretManager.js';
 
 // Cache JWT config to avoid repeated Dapr calls
-let _jwtConfigCache = null;
+let jwtConfigCache = null;
 
 async function getCachedJwtConfig() {
-  if (_jwtConfigCache === null) {
-    _jwtConfigCache = await getJwtConfig();
+  if (jwtConfigCache === null) {
+    jwtConfigCache = await getJwtConfig();
   }
-  return _jwtConfigCache;
+  return jwtConfigCache;
 }
 
 /**
@@ -31,7 +31,10 @@ export const authenticateJWT = async (req, res, next) => {
   }
   try {
     const jwtConfig = await getCachedJwtConfig();
-    const decoded = jwt.verify(token, jwtConfig.secret);
+    const decoded = jwt.verify(token, jwtConfig.secret, {
+      issuer: jwtConfig.issuer,
+      audience: jwtConfig.audience
+    });
     req.user = {
       id: decoded.id,
       email: decoded.email,
@@ -64,50 +67,4 @@ export const requireRoles = (...roles) => {
 
     next();
   };
-};
-
-/**
- * Middleware to require admin role
- */
-export const requireAdmin = (req, res, next) => {
-  return requireRoles('admin')(req, res, next);
-};
-
-/**
- * Middleware to require superadmin role
- */
-export const requireSuperAdmin = (req, res, next) => {
-  return requireRoles('superadmin')(req, res, next);
-};
-
-/**
- * Optional authentication - attaches user if token present but doesn't require it
- */
-export const optionalAuth = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    req.user = null;
-    return next();
-  }
-
-  const token = authHeader.split(' ')[1];
-  if (!token) {
-    req.user = null;
-    return next();
-  }
-
-  try {
-    const jwtConfig = await getCachedJwtConfig();
-    const decoded = jwt.verify(token, jwtConfig.secret);
-    req.user = {
-      id: decoded.id,
-      email: decoded.email,
-      roles: decoded.roles || [],
-    };
-  } catch (err) {
-    req.user = null;
-  }
-
-  next();
 };

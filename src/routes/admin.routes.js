@@ -1,7 +1,6 @@
 import express from 'express';
 import { getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/admin.controller.js';
-import { authenticateJWT } from '../middlewares/auth.middleware.js';
-import { requireRoles } from '../middlewares/auth.middleware.js';
+import { authenticateJWT, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
