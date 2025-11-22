@@ -1,7 +1,19 @@
 import logger from '../core/logger.js';
 import asyncHandler from '../middlewares/async.handler.js';
 import { fetchAllUsers, fetchUserById, updateUserById, removeUserById } from '../clients/user.service.client.js';
+import {
+  fetchAllOrders,
+  fetchOrdersPaged,
+  fetchOrderById,
+  updateOrderStatus as updateOrderStatusInService,
+  deleteOrderById,
+  fetchOrderStats,
+} from '../clients/order.service.client.js';
 import adminValidator from '../validators/admin.validator.js';
+
+// ============================================================================
+// User Management
+// ============================================================================
 
 /**
  * @desc    Get all users
@@ -75,4 +87,89 @@ export const deleteUser = asyncHandler(async (req, res) => {
   logger.info('Admin deleting user', { actorId: req.user?.id, targetId: req.params.id });
   await removeUserById(req.params.id, req.headers.authorization?.split(' ')[1]);
   res.status(204).send();
+});
+
+// ============================================================================
+// Order Management
+// ============================================================================
+
+/**
+ * @desc    Get all orders
+ * @route   GET /admin/orders
+ * @access  Admin
+ */
+export const getAllOrders = asyncHandler(async (req, res) => {
+  logger.info('Admin requested all orders', { actorId: req.user?._id });
+  const orders = await fetchAllOrders(req.headers.authorization?.split(' ')[1]);
+  res.json(orders);
+});
+
+/**
+ * @desc    Get paginated orders
+ * @route   GET /admin/orders/paged
+ * @access  Admin
+ */
+export const getOrdersPaged = asyncHandler(async (req, res) => {
+  logger.info('Admin requested paged orders', { actorId: req.user?._id, query: req.query });
+  const orders = await fetchOrdersPaged(req.headers.authorization?.split(' ')[1], req.query);
+  res.json(orders);
+});
+
+/**
+ * @desc    Get order by ID
+ * @route   GET /admin/orders/:id
+ * @access  Admin
+ */
+export const getOrderById = asyncHandler(async (req, res) => {
+  logger.info('Admin requested order by id', { actorId: req.user?._id, orderId: req.params.id });
+  const order = await fetchOrderById(req.params.id, req.headers.authorization?.split(' ')[1]);
+  res.json(order);
+});
+
+/**
+ * @desc    Update order status
+ * @route   PUT /admin/orders/:id/status
+ * @access  Admin
+ */
+export const updateOrderStatus = asyncHandler(async (req, res) => {
+  logger.info('Admin updating order status', { actorId: req.user?.id, orderId: req.params.id });
+  const updated = await updateOrderStatusInService(
+    req.params.id,
+    req.body,
+    req.headers.authorization?.split(' ')[1]
+  );
+  res.json(updated);
+});
+
+/**
+ * @desc    Delete order by ID
+ * @route   DELETE /admin/orders/:id
+ * @access  Admin
+ */
+export const deleteOrder = asyncHandler(async (req, res) => {
+  logger.info('Admin deleting order', { actorId: req.user?.id, orderId: req.params.id });
+  await deleteOrderById(req.params.id, req.headers.authorization?.split(' ')[1]);
+  res.status(204).send();
+});
+
+/**
+ * @desc    Get order statistics
+ * @route   GET /admin/orders/stats
+ * @access  Admin
+ */
+export const getOrderStats = asyncHandler(async (req, res) => {
+  const includeRecent = req.query.includeRecent === 'true';
+  const recentLimit = parseInt(req.query.recentLimit) || 10;
+
+  logger.info('Admin requested order stats', {
+    actorId: req.user?._id,
+    includeRecent,
+    recentLimit,
+  });
+
+  const stats = await fetchOrderStats(req.headers.authorization?.split(' ')[1], {
+    includeRecent,
+    recentLimit,
+  });
+  res.json(stats);
 });
